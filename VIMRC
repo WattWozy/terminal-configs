@@ -1,0 +1,144 @@
+Here’s a **cold, concise list** of valuable, modern additions you can put in your `.vimrc`, based on what you already have (minimal setup + vim-plug + folding markers).
+
+---
+
+## **Core Quality-of-Life**
+
+Add these immediately:
+
+```vim
+" Sensible defaults
+set number
+set relativenumber
+set smartindent
+set expandtab
+set shiftwidth=4
+set tabstop=4
+set cursorline
+set autochdir
+set clipboard=unnamedplus
+set ignorecase smartcase
+set incsearch
+set hlsearch
+set splitbelow splitright
+set scrolloff=4
+```
+
+---
+
+## **Better UX**
+
+```vim
+" Remove swap files
+set noswapfile
+set nobackup
+set nowritebackup
+
+" Fast updates
+set updatetime=300
+
+" Highlight yanked text
+au TextYankPost * silent! lua vim.highlight.on_yank()
+```
+
+---
+
+## **Plugins Worth Adding**
+
+Inside your `plug#begin()` block:
+
+```vim
+" File Explorer
+Plug 'preservim/nerdtree'
+
+" Fuzzy Finder
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+" Git
+Plug 'tpope/vim-fugitive'
+
+" Commenting
+Plug 'tpope/vim-commentary'
+
+" Surround text objects
+Plug 'tpope/vim-surround'
+
+" Auto pairs
+Plug 'jiangmiao/auto-pairs'
+
+" Statusline
+Plug 'itchyny/lightline.vim'
+
+" Syntax highlight pack
+Plug 'sheerun/vim-polyglot'
+
+" Better highlighting for TODO, FIXME, etc.
+Plug 'folke/todo-comments.nvim'
+```
+
+---
+
+## **Mappings**
+
+Add simple, sharp mappings:
+
+```vim
+" Space as leader
+let mapleader=" "
+
+" Quick save / quit
+nnoremap <leader>w :w<CR>
+nnoremap <leader>q :q<CR>
+
+" Toggle NERDTree
+nnoremap <leader>e :NERDTreeToggle<CR>
+
+" Clear search highlight
+nnoremap <leader>h :nohlsearch<CR>
+```
+
+---
+
+## **Lightline (statusline)**
+
+```vim
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ }
+```
+
+---
+
+## **Optional but strong**
+
+### Auto format using `=` always:
+
+```vim
+nnoremap <leader>f gg=G`` 
+```
+
+### Persistent undo:
+
+```vim
+if has("persistent_undo")
+    set undodir=~/.vim/undodir
+    set undofile
+endif
+```
+
+---
+
+## **Minimal, modern, and fast Visual Vim**
+
+If you want a visual overhaul while keeping it light:
+
+```vim
+Plug 'morhetz/gruvbox'
+colorscheme gruvbox
+set background=dark
+```
+
+---
+
+If you want, I can **rewrite the full .vimrc cleanly** or **optimize it for Java development** (since you're deep into JavaParser).
