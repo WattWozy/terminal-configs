@@ -1,0 +1,113 @@
+# PowerShell Profile - Cool Setup
+# Save this to your profile: $PROFILE
+
+# ===== Oh My Posh Prompt (Install first: winget install JanDeDobbeleer.OhMyPosh) =====
+# oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\jandedobbeleer.omp.json" | Invoke-Expression
+
+# ===== Custom Prompt (if you don't want Oh My Posh) =====
+function prompt {
+    $location = Get-Location
+    $gitBranch = git branch --show-current 2>$null
+    
+    Write-Host "┌─[" -NoNewline -ForegroundColor Cyan
+    Write-Host "$env:USERNAME" -NoNewline -ForegroundColor Green
+    Write-Host "@" -NoNewline -ForegroundColor DarkGray
+    Write-Host "$env:COMPUTERNAME" -NoNewline -ForegroundColor Magenta
+    Write-Host "]─[" -NoNewline -ForegroundColor Cyan
+    Write-Host "$location" -NoNewline -ForegroundColor Yellow
+    Write-Host "]" -ForegroundColor Cyan
+    
+    if ($gitBranch) {
+        Write-Host "├─[" -NoNewline -ForegroundColor Cyan
+        Write-Host "git:" -NoNewline -ForegroundColor Red
+        Write-Host "$gitBranch" -NoNewline -ForegroundColor Blue
+        Write-Host "]" -ForegroundColor Cyan
+    }
+    
+    Write-Host "└─>" -NoNewline -ForegroundColor Cyan
+    return " "
+}
+
+# ===== Useful Aliases =====
+Set-Alias -Name vim -Value nvim -ErrorAction SilentlyContinue
+Set-Alias -Name ll -Value Get-ChildItem
+Set-Alias -Name g -Value git
+Set-Alias -Name grep -Value Select-String
+Set-Alias -Name touch -Value New-Item
+
+# ===== Custom Functions =====
+
+# Better ls with colors
+function la { Get-ChildItem -Force $args }
+function l { Get-ChildItem $args }
+
+# Quick directory navigation
+function .. { Set-Location .. }
+function ... { Set-Location ../.. }
+function .... { Set-Location ../../.. }
+
+# Open current directory in Explorer
+function explorer { explorer.exe . }
+function ex { explorer.exe . }
+
+# Git shortcuts
+function gs { git status }
+function ga { git add $args }
+function gc { git commit -m $args }
+function gp { git push }
+function gl { git log --oneline --graph --decorate --all }
+
+# Quick file/folder creation
+function mkd { 
+    param([string]$name)
+    New-Item -ItemType Directory -Path $name
+    Set-Location $name
+}
+
+# Find files
+function ff {
+    param([string]$name)
+    Get-ChildItem -Recurse -Filter "*$name*" -ErrorAction SilentlyContinue
+}
+
+# System info
+function sysinfo {
+    Get-ComputerInfo | Select-Object CsName, WindowsVersion, OsArchitecture, CsProcessors
+}
+
+# Show public IP
+function myip {
+    (Invoke-WebRequest -Uri "https://api.ipify.org").Content
+}
+
+# Clear with style
+function cls-art {
+    Clear-Host
+    Write-Host "
+    ╔═══════════════════════════════════════╗
+    ║     PowerShell Terminal Ready!        ║
+    ╚═══════════════════════════════════════╝
+    " -ForegroundColor Cyan
+}
+
+# ===== PSReadLine Configuration (better command line editing) =====
+Set-PSReadLineOption -PredictionSource History
+Set-PSReadLineOption -PredictionViewStyle ListView
+Set-PSReadLineOption -EditMode Emacs
+Set-PSReadLineOption -BellStyle None
+Set-PSReadLineKeyHandler -Chord 'Ctrl+d' -Function DeleteChar
+Set-PSReadLineKeyHandler -Chord 'Ctrl+w' -Function BackwardDeleteWord
+Set-PSReadLineKeyHandler -Chord 'Alt+d' -Function DeleteWord
+Set-PSReadLineKeyHandler -Chord 'Ctrl+LeftArrow' -Function BackwardWord
+Set-PSReadLineKeyHandler -Chord 'Ctrl+RightArrow' -Function ForwardWord
+
+# ===== Welcome Message =====
+Write-Host "
+╔═══════════════════════════════════════╗
+║  PowerShell $($PSVersionTable.PSVersion.ToString().PadRight(27))║
+╚═══════════════════════════════════════╝
+" -ForegroundColor Cyan
+
+Write-Host "Tip: " -NoNewline -ForegroundColor Yellow
+Write-Host "Type 'll' for directory listing, 'gs' for git status" -ForegroundColor Gray
+Write-Host ""
